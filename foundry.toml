@@ -1,0 +1,82 @@
+# ============================================================
+# foundry.toml - Configuracion del proyecto Foundry
+# ============================================================
+
+[profile.default]
+# src: Directorio donde se encuentran los contratos fuente (.sol).
+# Forge compila todos los archivos .sol dentro de esta carpeta.
+src = "src"
+
+# out: Directorio donde se generan los artefactos compilados (ABI, bytecode).
+# Se crea automaticamente al ejecutar `forge build`.
+out = "out"
+
+# libs: Directorios que contienen librerias externas (git submodules).
+# Forge busca contratos importados en estas carpetas.
+libs = ["lib"]
+
+# solc_version: Version del compilador Solidity a utilizar.
+# Forge descarga y gestiona automaticamente esta version.
+solc_version = "0.8.28"
+
+# remappings: Mapeo de rutas de importacion.
+# Permiten usar @openzeppelin/contracts/ y forge-std/ en los imports
+# sin tener que escribir la ruta completa relativa al directorio lib/.
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "forge-std/=lib/forge-std/src/",
+]
+
+# ============================================================
+# OPTIMIZER - Reduce el gas y tamano del bytecode
+# ============================================================
+
+# optimizer: Activa el optimizador del compilador Solidity.
+# Cuando esta en true, solc intenta reducir el tamano del bytecode
+# y el gas necesario para ejecutar las funciones.
+optimizer = true
+
+# optimizer_runs: Numero de veces que se espera que cada funcion sea llamada.
+# - Valor bajo (200): bytecode mas pequeno, deployment mas barato, ejecucion un poco mas cara
+# - Valor alto (10000+): bytecode mas grande, deployment mas caro, ejecucion mas barata
+# - 200 es el balance recomendado para la mayoria de tokens
+optimizer_runs = 200
+
+# ============================================================
+# VIA_IR - Compilador de Representacion Intermedia
+# ============================================================
+
+# via_ir: Activa la pipeline de compilacion IR (Intermediate Representation).
+# Esta es la nueva forma de compilar de Solidity 0.8.13+.
+# Permite optimizaciones mas agresivas que el compilador tradicional.
+# - Reduce el gas de ejecucion significativamente
+# - Incrementa el tiempo de compilacion (aceptable para proyectos medianos)
+# - Recomendado para contratos en produccion
+via_ir = true
+
+# ============================================================
+# RPC ENDPOINTS - URLs de redes Ethereum
+# ============================================================
+
+# rpc_endpoints: Define aliases para URLs RPC de diferentes redes.
+# En lugar de escribir la URL completa, puedes usar el alias.
+# Se accede via variable de entorno con ${NOMBRE_VARIABLE}.
+# Uso: forge script ... --rpc-url sepolia
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+
+# ============================================================
+# ETHERSCAN - Verificacion de contratos
+# ============================================================
+
+# etherscan: Configuracion para verificar contratos en Etherscan.
+# Permite verificar el codigo fuente de un contrato despues del despliegue.
+# Uso: forge verify-contract <direccion> --chain sepolia
+# O:   forge script ... --verify
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}", url = "https://api.etherscan.io/v2/api?chainid=11155111" }
+
+# ============================================================
+# MAS OPCIONES DE CONFIGURACION
+# ============================================================
+# https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
